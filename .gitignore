@@ -1,1 +1,5 @@
 application/target
+.terraform
+*.tfstate
+*.tfstate.*
+
