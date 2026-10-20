@@ -3,3 +3,6 @@ application/target
 *.tfstate
 *.tfstate.*
 
+
+/terraform/cloudtrail  lookup-events \\*
+/kubernetes/-n

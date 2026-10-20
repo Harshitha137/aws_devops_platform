@@ -1,10 +1,16 @@
 module "eks" {
-  source  = "terraform-aws-modules/eks/aws"
-  version = "~> 21.0"
+  source            = "terraform-aws-modules/eks/aws"
+  version           = "~> 21.0"
   encryption_config = null
 
   name               = "devops-eks"
   kubernetes_version = "1.33"
+
+  addons = {
+    coredns    = {}
+    kube-proxy = {}
+    vpc-cni    = {}
+  }
 
   vpc_id = module.vpc.vpc_id
 
