@@ -1,5 +1,8 @@
 pipeline{
 	agent any
+	tools{
+		jdk 'Java21'
+}
 	stages{
 		stage("Git Checkout"){
 			steps{
