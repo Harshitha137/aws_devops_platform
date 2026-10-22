@@ -9,8 +9,11 @@ pipeline{
 
 		stage("Maven Build"){
 			steps{
-				sh "mvn clean package -DskipTests"
+				 dir('application') {
+					sh "mvn clean package -DskipTests"
 			}
 		}
 	}
 }
+}
+
