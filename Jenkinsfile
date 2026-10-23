@@ -27,13 +27,7 @@ stage('Maven Build') {
         }
     }
 }
-stage('Docker build'){
-	steps{
-		 dir('application') {
-            sh ' docker build -t employee-api:${BUILD_NUMBER} .'
-		 }
-	}
-}
+
 	}
 }
 
