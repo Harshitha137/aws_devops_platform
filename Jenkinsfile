@@ -10,13 +10,16 @@ pipeline{
 			}
 		}
 
-		stage("Maven Build"){
-			steps{
-				 dir('application') {
-					sh "mvn clean package -DskipTests"
-			}
-		}
-	}
+		stage('Maven Build') {
+    steps {
+        dir('application') {
+            sh '''
+                export PATH=$JAVA_HOME/bin:$PATH
+                mvn clean package -DskipTests
+            '''
+        }
+    }
 }
+	}
 }
 
