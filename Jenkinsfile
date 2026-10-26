@@ -31,6 +31,15 @@ pipeline {
                 }
             }
         }
+        
+        stage('Docker Build') {
+            steps {
+                dir('application') {
+                    sh 'docker build -t employee-api:${BUILD_NUMBER} .'
+        }
+    }
+}
+
     }
 }
 
