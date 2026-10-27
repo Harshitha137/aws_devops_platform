@@ -50,7 +50,7 @@ pipeline {
         stage('Push to ECR') {
             steps {
                 sh '''
-                    echo ${BUILD_NUMBER}
+                    echo BUILD_NUMBER = ${BUILD_NUMBER}
                     aws ecr get-login-password --region ap-south-1 |
                     docker login --username AWS --password-stdin 446983861261.dkr.ecr.ap-south-1.amazonaws.com
                     docker tag employee-api:${BUILD_NUMBER} 446983861261.dkr.ecr.ap-south-1.amazonaws.com/employee-api:${BUILD_NUMBER}
