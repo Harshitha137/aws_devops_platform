@@ -57,6 +57,25 @@ pipeline {
                     '''
     }
 }
+        
+    stage('Deploy to Kubernetes') {
+        steps {
+            sh '''
+                ssh -i ~/.ssh/k3s_deploy \
+                    -o StrictHostKeyChecking=accept-new \
+                    ubuntu@172.31.6.81 \
+                    "sudo k3s kubectl set image deployment/employee-api \
+                    employee-api=446983861261.dkr.ecr.ap-south-1.amazonaws.com/employee-api:${BUILD_NUMBER} \
+                    -n employee-app"
+
+                ssh -i ~/.ssh/k3s_deploy \
+                    ubuntu@172.31.6.81 \
+                    "sudo k3s kubectl rollout status deployment/employee-api \
+                    -n employee-app --timeout=180s"
+            '''
+    }
+}
+
 
 
     }
