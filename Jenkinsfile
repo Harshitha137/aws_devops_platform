@@ -59,23 +59,41 @@ pipeline {
     }
 }
         
-    stage('Deploy to Kubernetes') {
-        steps {
-            sh '''
-                ssh -i ~/.ssh/k3s_deploy \
-                    -o StrictHostKeyChecking=accept-new \
-                    ubuntu@172.31.6.81 \
-                    "sudo k3s kubectl set image deployment/employee-api \
-                    employee-api=446983861261.dkr.ecr.ap-south-1.amazonaws.com/employee-api:${BUILD_NUMBER} \
-                    -n employee-app"
+   
+stage('Deploy to Kubernetes') {
+    steps {
+        sh '''
+            set -e
 
-                ssh -i ~/.ssh/k3s_deploy \
-                    ubuntu@172.31.6.81 \
-                    "sudo k3s kubectl rollout status deployment/employee-api \
-                    -n employee-app --timeout=180s"
-            '''
+            ECR_PASSWORD=$(aws ecr get-login-password --region ap-south-1)
+
+            printf '%s' "$ECR_PASSWORD" | ssh \
+                -i /var/lib/jenkins/.ssh/k3s_deploy \
+                -o StrictHostKeyChecking=accept-new \
+                ubuntu@172.31.6.81 \
+                'sudo k3s kubectl create secret docker-registry ecr-secret \
+                --docker-server=446983861261.dkr.ecr.ap-south-1.amazonaws.com \
+                --docker-username=AWS \
+                --docker-password="$(cat)" \
+                -n employee-app --dry-run=client -o yaml |
+                sudo k3s kubectl apply -f -'
+
+            unset ECR_PASSWORD
+
+            ssh -i /var/lib/jenkins/.ssh/k3s_deploy \
+                ubuntu@172.31.6.81 \
+                "sudo k3s kubectl set image deployment/employee-api \
+                employee-api=446983861261.dkr.ecr.ap-south-1.amazonaws.com/employee-api:${BUILD_NUMBER} \
+                -n employee-app"
+
+            ssh -i /var/lib/jenkins/.ssh/k3s_deploy \
+                ubuntu@172.31.6.81 \
+                "sudo k3s kubectl rollout status deployment/employee-api \
+                -n employee-app --timeout=180s"
+        '''
     }
 }
+
 
 
 
