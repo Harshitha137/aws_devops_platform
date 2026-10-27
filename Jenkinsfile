@@ -3,6 +3,13 @@ pipeline {
     tools {
         jdk 'Java 21'
     }
+    
+    environment {
+        AWS_REGION = 'ap-south-1'
+        ECR_REPOSITORY = '446983861261.dkr.ecr.ap-south-1.amazonaws.com/employee-api'
+        IMAGE_TAG = "${BUILD_NUMBER}"
+    }
+
     stages {
         stage("Git Checkout") {
             steps {
