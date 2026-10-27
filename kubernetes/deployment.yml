@@ -17,7 +17,7 @@ spec:
         - name: ecr-secret
       containers:
         - name: employee-api
-          image: 446983861261.dkr.ecr.ap-south-1.amazonaws.com/employee-api:1.0
+          image: 446983861261.dkr.ecr.ap-south-1.amazonaws.com/employee-api:${BUILD_NUMBER}
           imagePullPolicy: Always
           ports:
             - name: http
