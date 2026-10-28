@@ -82,6 +82,8 @@ stage('Deploy to Kubernetes') {
             sed "s|\${BUILD_NUMBER}|${BUILD_NUMBER}|g" \
                 kubernetes/deployment.yml > deployment-rendered.yml
 
+            grep 'image:' deployment-rendered.yml    
+
             scp -i /var/lib/jenkins/.ssh/k3s_deploy \
                 deployment-rendered.yml \
                 ubuntu@172.31.6.81:/tmp/deployment-rendered.yml
