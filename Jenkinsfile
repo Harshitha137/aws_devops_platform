@@ -59,7 +59,6 @@ pipeline {
     }
 }
         
-   
 stage('Deploy to Kubernetes') {
     steps {
         sh '''
@@ -79,18 +78,10 @@ stage('Deploy to Kubernetes') {
 
             unset ECR_PASSWORD
 
-            sed "s|\${BUILD_NUMBER}|${BUILD_NUMBER}|g" \
-                kubernetes/deployment.yml > deployment-rendered.yml
-
-            grep 'image:' deployment-rendered.yml    
-
-            scp -i /var/lib/jenkins/.ssh/k3s_deploy \
-                deployment-rendered.yml \
-                ubuntu@172.31.6.81:/tmp/deployment-rendered.yml
-
-            ssh -i /var/lib/jenkins/.ssh/k3s_deploy \
+            envsubst < kubernetes/deployment.yml | \
+                ssh -i /var/lib/jenkins/.ssh/k3s_deploy \
                 ubuntu@172.31.6.81 \
-                'sudo k3s kubectl apply -f /tmp/deployment-rendered.yml'
+                'sudo k3s kubectl apply -f -'
 
             ssh -i /var/lib/jenkins/.ssh/k3s_deploy \
                 ubuntu@172.31.6.81 \
@@ -99,6 +90,7 @@ stage('Deploy to Kubernetes') {
         '''
     }
 }
+
     }
 }
 
