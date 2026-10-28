@@ -79,7 +79,7 @@ stage('Deploy to Kubernetes') {
 
             unset ECR_PASSWORD
 
-            sed "s/\\$\\{BUILD_NUMBER\\}/${BUILD_NUMBER}/g" \
+            sed "s|\${BUILD_NUMBER}|${BUILD_NUMBER}|g" \
                 kubernetes/deployment.yml > deployment-rendered.yml
 
             scp -i /var/lib/jenkins/.ssh/k3s_deploy \
